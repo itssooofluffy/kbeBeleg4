@@ -19,13 +19,13 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.htwBerlin.ai.kbe</groupId>
-    <artifactId>contactsJPA</artifactId>
+    <artifactId>MySongListService</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>JAX-RS Web Service with DI</name>
     <url>http://maven.apache.org</url>
 
-    <dependencies>
+     <dependencies>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
@@ -74,7 +74,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.6</version>
+            <version>5.1.23</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

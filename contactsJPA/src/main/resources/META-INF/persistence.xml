@@ -10,11 +10,11 @@
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url" 
-                      value="jdbc:mysql://db.f4.htw-berlin.de:3306/_s0546860__songDB"/>
+                      value="jdbc:mysql://db.f4.htw-berlin.de:3306/_s0546860__songsDB"/>
             <property name="javax.persistence.jdbc.user" value="s0546860"/>
-            <property name="javax.persistence.jdbc.password" value="s0546860"/>
+            <property name="javax.persistence.jdbc.password" value="schueler"/>
                     
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="false"/>
