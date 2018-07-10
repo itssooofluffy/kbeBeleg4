@@ -16,10 +16,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-/**
- *
- * @author Admin
- */
+@Singleton
 public class SongsDAOIml implements SongsDAO {
 
     private EntityManagerFactory emf;
