@@ -33,17 +33,33 @@ public class SonglistEndpoint {
         this.UsersDao = userDao;
         this.SonglistDao = songlistDao;
     }
-    
+
     @GET
     @Path("/{id}/songlists")
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public Collection<Songlist> getSonglists(@PathParam("id") String id) {
+    public Collection<Songlist> getSonglists(@PathParam("id") String userId, @HeaderParam("authorization") String authString) {
     	Collection<Songlist> songlist = null;
-    	User user = UsersDao.findUserById(id);
-    	if (id != null) {
-    		songlist = SonglistDao.findPublicSonglistsByUserId(id);
-    	}
+    	User user = UsersDao.findUserById(userId);
+    	if (userId != null && isUserAuth(authString)) {
+    		songlist = SonglistDao.findAllSonglistsByUserId(userId);
+    	} else {
+        songlist = SonglistDao.findPublicSonglistsByUserId(userId);
+      }
     	return songlist;
+    }
+
+    @GET
+    @Path("/{id}/songlists/{listId}")
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public Collection<Songlist> getSonglists(@PathParam("id") String userId, @PathParam("listId") Integer listId,
+    @HeaderParam("authorization") String authString) {
+      User user = UsersDao.findUserById(userId);
+      Songlist songlist = SonglistDAO.findSonglistBySonglistId(listId);
+      if (user != null && isUserAuth(authString) && songlist != null && songlist.getUser() == user) {
+        return songlist;
+      } else {
+        return SonglistDAO.getPublicSonglistBySonglistId(listId);
+      }
     }
 
     @Context
@@ -71,5 +87,15 @@ public class SonglistEndpoint {
     public Response delete(@PathParam("id") Integer id) {
         SonglistDao.deleteSonglist(id);
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    private boolean isUserAuth(String authString) throws IOException {
+        if (authString != null) {
+            List<String> tokenList = TokenCreator.getInstance().getTokenList();
+            if (tokenList.stream().anyMatch((token) -> (token.equals(authString)))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

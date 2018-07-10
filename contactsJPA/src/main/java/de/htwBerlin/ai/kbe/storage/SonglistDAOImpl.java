@@ -22,7 +22,7 @@ public class SonglistDAOImpl implements SonglistDAO {
     public SonglistDAOImpl(EntityManagerFactory emf) {
         this.emf = emf;
     }
-   
+
 	@Override
 	public Collection<Songlist> findPublicSonglistsByUserId(String userId) {
         EntityManager em = emf.createEntityManager();
@@ -56,6 +56,18 @@ public class SonglistDAOImpl implements SonglistDAO {
         }
         return entity;
     }
+
+    @Override
+    public Songlist getPublicSonglistBySonglistId(String songlistId) {
+      EntityManager em = emf.createEntityManager();
+          Songlist entity = null;
+          try {
+            TypedQuery<Songlist> query = em.createQuery("SELECT c FROM Songlist c WHERE ispublic=true AND songlistId=" + songlistId + " ", Songlist.class);
+            return query.getResultList();
+          } finally {
+              em.close();
+          }
+          return entity;
 
 
 	@Override
@@ -102,6 +114,5 @@ public class SonglistDAOImpl implements SonglistDAO {
 	            em.close();
 	        }
 	    }
-		
-}
 
+}

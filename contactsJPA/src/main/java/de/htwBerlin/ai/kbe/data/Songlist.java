@@ -25,38 +25,38 @@ public class Songlist{
     private int id;
     private String listName;
     private boolean ispublic;
-    
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    
+
     @OneToMany(mappedBy="songlist", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
     private Set<Song> songSet;
 
     public Songlist() {}
-    
+
     public Songlist(String listName, boolean ispublic) {
         this(listName, ispublic, null);
     }
-    
+
     public Songlist(String listName, boolean ispublic, User user) {
     	this.listName = listName;
     	this.ispublic = ispublic;
 		this.user = user;
     }
-    
+
     public int getId() {
     	return id;
     }
-    
+
     public void setListName(String name) {
     	this.listName = name;
     }
-    
+
     public String getListName() {
     	return listName;
     }
-    
+
     public boolean isIspublic() {
 		return ispublic;
 	}
@@ -64,11 +64,15 @@ public class Songlist{
 	public void setIspublic(boolean ispublic) {
 		this.ispublic = ispublic;
 	}
-    
+
+  public User getUser() {
+    return User;
+  }
+
     public void setUser(User user) {
-        this.user = user; 
+        this.user = user;
     }
-  
+
     @Override
     public String toString() {
         String songs = "Song:\n";
@@ -77,7 +81,7 @@ public class Songlist{
         }
         return "Songlist [id=" + id + ", SonglistName= " + listName + " songSet=" + songs + "]";
     }
-    
+
     public Set<Song> getSongSet() {
         if(songSet == null) {
             songSet = new HashSet<>();
@@ -92,7 +96,7 @@ public class Songlist{
             this.songSet.forEach(a-> a.setSongList(this));
         }
     }
-    
+
     public void addSong(Song song) {
         if(songSet == null) {
             songSet = new HashSet<>();
@@ -101,6 +105,6 @@ public class Songlist{
         this.songSet.add(song);
     }
 
-	
-    
+
+
 }
