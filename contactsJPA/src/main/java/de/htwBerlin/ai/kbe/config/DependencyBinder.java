@@ -19,5 +19,6 @@ public class DependencyBinder extends AbstractBinder {
         bind (Persistence.createEntityManagerFactory("songDB-PU")).to(EntityManagerFactory.class);
         bind(DBUsersDAO.class).to(UsersDAO.class).in(Singleton.class);
         bind(SonglistDAOImpl.class).to(SonglistDAO.class).in(Singleton.class);
+        bind(SongsDAOIml.class).to(SongsDAO.class).in(Singleton.class);
     }
 }
