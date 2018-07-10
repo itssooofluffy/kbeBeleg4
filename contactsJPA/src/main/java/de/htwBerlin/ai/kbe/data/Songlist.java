@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "songlist")
 @Entity
 @Table(name = "Songlist")
-public class Songlist{
+public class Songlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,44 +30,45 @@ public class Songlist{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy="songlist", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "songlist", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Song> songSet;
 
-    public Songlist() {}
+    public Songlist() {
+    }
 
     public Songlist(String listName, boolean ispublic) {
         this(listName, ispublic, null);
     }
 
     public Songlist(String listName, boolean ispublic, User user) {
-    	this.listName = listName;
-    	this.ispublic = ispublic;
-		this.user = user;
+        this.listName = listName;
+        this.ispublic = ispublic;
+        this.user = user;
     }
 
     public int getId() {
-    	return id;
+        return id;
     }
 
     public void setListName(String name) {
-    	this.listName = name;
+        this.listName = name;
     }
 
     public String getListName() {
-    	return listName;
+        return listName;
     }
 
     public boolean isIspublic() {
-		return ispublic;
-	}
+        return ispublic;
+    }
 
-	public void setIspublic(boolean ispublic) {
-		this.ispublic = ispublic;
-	}
+    public void setIspublic(boolean ispublic) {
+        this.ispublic = ispublic;
+    }
 
-  public User getUser() {
-    return User;
-  }
+    public User getUser() {
+        return user;
+    }
 
     public void setUser(User user) {
         this.user = user;
@@ -76,14 +77,14 @@ public class Songlist{
     @Override
     public String toString() {
         String songs = "Song:\n";
-        for(Song s:songSet) {
+        for (Song s : songSet) {
             songs = songs.concat(s.toString()) + "\n";
         }
         return "Songlist [id=" + id + ", SonglistName= " + listName + " songSet=" + songs + "]";
     }
 
     public Set<Song> getSongSet() {
-        if(songSet == null) {
+        if (songSet == null) {
             songSet = new HashSet<>();
         }
         return songSet;
@@ -92,19 +93,17 @@ public class Songlist{
     public void setSongSet(Set<Song> songSet) {
         this.songSet = songSet;
         // Works for JSON, but not for XML
-        if(songSet != null) {
-            this.songSet.forEach(a-> a.setSongList(this));
+        if (songSet != null) {
+            this.songSet.forEach(a -> a.setSongList(this));
         }
     }
 
     public void addSong(Song song) {
-        if(songSet == null) {
+        if (songSet == null) {
             songSet = new HashSet<>();
         }
         song.setSongList(this);
         this.songSet.add(song);
     }
-
-
 
 }

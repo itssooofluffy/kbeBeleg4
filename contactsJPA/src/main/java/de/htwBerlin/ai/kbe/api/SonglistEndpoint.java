@@ -21,6 +21,8 @@ import de.htwBerlin.ai.kbe.data.Songlist;
 import de.htwBerlin.ai.kbe.data.User;
 import de.htwBerlin.ai.kbe.storage.SonglistDAO;
 import de.htwBerlin.ai.kbe.storage.UsersDAO;
+import java.io.IOException;
+import javax.ws.rs.HeaderParam;
 
 @Path("/UserId")
 public class SonglistEndpoint {
@@ -37,7 +39,7 @@ public class SonglistEndpoint {
     @GET
     @Path("/{id}/songlists")
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public Collection<Songlist> getSonglists(@PathParam("id") String userId, @HeaderParam("authorization") String authString) {
+    public Collection<Songlist> getSonglists(@PathParam("id") String userId, @HeaderParam("authorization") String authString) throws IOException {
     	Collection<Songlist> songlist = null;
     	User user = UsersDao.findUserById(userId);
     	if (userId != null && isUserAuth(authString)) {
@@ -51,14 +53,13 @@ public class SonglistEndpoint {
     @GET
     @Path("/{id}/songlists/{listId}")
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public Collection<Songlist> getSonglists(@PathParam("id") String userId, @PathParam("listId") Integer listId,
-    @HeaderParam("authorization") String authString) {
+    public Songlist getSonglists(@PathParam("id") String userId, @PathParam("listId") String listId, @HeaderParam("authorization") String authString) throws IOException {
       User user = UsersDao.findUserById(userId);
-      Songlist songlist = SonglistDAO.findSonglistBySonglistId(listId);
+      Songlist songlist = SonglistDao.findSonglistBySonglistId(listId);
       if (user != null && isUserAuth(authString) && songlist != null && songlist.getUser() == user) {
         return songlist;
       } else {
-        return SonglistDAO.getPublicSonglistBySonglistId(listId);
+        return SonglistDao.getPublicSonglistBySonglistId(listId);
       }
     }
 
@@ -91,7 +92,7 @@ public class SonglistEndpoint {
 
     private boolean isUserAuth(String authString) throws IOException {
         if (authString != null) {
-            List<String> tokenList = TokenCreator.getInstance().getTokenList();
+            Collection<String> tokenList = UsersDao.getTokenList();
             if (tokenList.stream().anyMatch((token) -> (token.equals(authString)))) {
                 return true;
             }

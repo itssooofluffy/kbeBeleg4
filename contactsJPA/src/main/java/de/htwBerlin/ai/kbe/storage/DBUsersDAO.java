@@ -12,17 +12,22 @@ import javax.persistence.TypedQuery;
 
 import de.htwBerlin.ai.kbe.data.Songlist;
 import de.htwBerlin.ai.kbe.data.User;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public class DBUsersDAO implements UsersDAO {
 
     private EntityManagerFactory emf;
+    static List<String> tokenList = new ArrayList<>();
+    private static String token = null;
 
     @Inject
     public DBUsersDAO(EntityManagerFactory emf) {
         this.emf = emf;
     }
-    
+
     @Override
     public User findUserById(String id) {
         EntityManager em = emf.createEntityManager();
@@ -35,7 +40,6 @@ public class DBUsersDAO implements UsersDAO {
         return entity;
     }
 
-    @Override
     public Collection<User> findAllUsers() {
         EntityManager em = emf.createEntityManager();
         try {
@@ -53,7 +57,7 @@ public class DBUsersDAO implements UsersDAO {
         try {
             transaction.begin();
             // MUST set the User in every address
-            for (Songlist a:User.getSonglistSet()) {
+            for (Songlist a : User.getSonglistSet()) {
                 a.setUser(User);
             }
             em.persist(User);
@@ -91,4 +95,42 @@ public class DBUsersDAO implements UsersDAO {
             em.close();
         }
     }
+
+    @Override
+    public boolean checkContact(String userId) {
+        Collection<User> listOfContacts = new ArrayList<>();
+        listOfContacts = findAllUsers();
+        for (User contactIterator : listOfContacts) {
+            if (contactIterator.getUserId().equals(userId)) {
+                createToken();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String createToken() {
+        SecureRandom random = new SecureRandom();
+        long longToken = Math.abs(random.nextLong());
+        String createdToken = Long.toString(longToken, 16);
+        this.token = createdToken;
+        tokenList.add("testToken");
+        tokenList.add(token);
+        return createdToken;
+    }
+
+    @Override
+    public List<String> getTokenList() {
+        return tokenList;
+    }
+
+    public static void addTokenList(String token) {
+        tokenList.add(token);
+    }
+
+    @Override
+    public String getToken() {
+        return token;
+    }
+
 }
